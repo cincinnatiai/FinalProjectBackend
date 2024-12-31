@@ -1,11 +1,12 @@
 const fs = require("fs");
 const Hapi = require('@hapi/hapi');
-const getPokemon = require("./getAllPokemonsRoute");
+const getPokemon = require("./getPokemonRoute");
 const saveAllPokemons = require("./getAllRoute");  
 const deleteAllPokemons = require("./deleteAllPokemonsRoute");  
 const deletePokemonById = require("./deletePokemonbyIdRoute");  
 const editPokemon = require("./editPokemonRoute"); 
 const addPokemon = require("./addPokemonRoute");  
+const pagePokemons = require("./getPokemonPageRoute");  
 
 
 
@@ -34,5 +35,9 @@ const routes = [
         method: 'POST',
         path: '/addPokemon',
         handler: addPokemon.handler,
+      },{
+        method: 'GET',
+        path: '/getPokemonPage',
+        handler: pagePokemons.handler,
       }]
 module.exports = routes;

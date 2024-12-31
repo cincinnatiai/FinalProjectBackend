@@ -51,7 +51,6 @@ const getPokemon = {
                 data: pokemonData,
             }).code(200);
         } catch (error) {
-            console.error(error);
             return h.response({
                 message: 'Error while processing the request',
                 error: error.message,
