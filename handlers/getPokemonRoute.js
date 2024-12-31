@@ -58,4 +58,5 @@ const getPokemon = {
         }
     },
 };
+
 module.exports = getPokemon;

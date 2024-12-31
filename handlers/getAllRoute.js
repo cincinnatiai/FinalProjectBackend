@@ -53,4 +53,5 @@ const saveAllPokemons = {
         }
     },
 };
+
 module.exports = saveAllPokemons;

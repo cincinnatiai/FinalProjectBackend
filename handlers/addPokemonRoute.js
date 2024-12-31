@@ -32,5 +32,4 @@ const addPokemon = {
         }
     },
 };
-
 module.exports = addPokemon;

@@ -30,5 +30,4 @@ const pagePokemons = {
         }
     }
 }
-
 module.exports = pagePokemons;

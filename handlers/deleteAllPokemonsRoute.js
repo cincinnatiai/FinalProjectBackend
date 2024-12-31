@@ -18,4 +18,5 @@ const deleteAllPokemons = {
         }
     },
 };
+
 module.exports = deleteAllPokemons;
