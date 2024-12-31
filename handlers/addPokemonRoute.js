@@ -8,7 +8,6 @@ const addPokemon = {
         if (!newPokemon.id) {
             return h.response({ message: 'A Pokémon ID is required!' }).code(400);
         }
-
         try {
             const existingPokemon = await PokemonData.findOne({ id: newPokemon.id });
 

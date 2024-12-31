@@ -30,5 +30,4 @@ const deletePokemonById = {
         }
     },
 };
-
 module.exports = deletePokemonById;

@@ -39,5 +39,6 @@ const routes = [
         method: 'GET',
         path: '/getPokemonPage',
         handler: pagePokemons.handler,
-      }]
+      }];
+
 module.exports = routes;

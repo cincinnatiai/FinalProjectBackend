@@ -36,5 +36,4 @@ const editPokemon = {
         }
     },
 };
-
 module.exports = editPokemon;
