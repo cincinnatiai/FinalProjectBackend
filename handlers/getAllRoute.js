@@ -10,8 +10,9 @@ const saveAllPokemons = {
             const savePokemon = async (id) => {
                 const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
                 if (!response.ok) {
-                    console.error(`Failed to fetch Pokémon with ID ${id}`);
-                    return null;
+                    return h.response({
+                        error: `Wasnt able to fetch from api`,
+                    }).code(400)
                 }
 
                 const data = await response.json();

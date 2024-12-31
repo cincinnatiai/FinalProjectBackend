@@ -11,7 +11,7 @@ const editPokemon = {
 
         const updates = request.payload; 
 
-        try {n
+        try {
             const result = await PokemonData.updateOne(
                 { id: parseInt(id, 10) }, 
                 { $set: updates }
