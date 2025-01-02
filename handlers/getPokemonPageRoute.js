@@ -10,7 +10,7 @@ const pagePokemons = {
             const fromPokemon = toPokemon - 9;
 
             const resultsPage = await PokemonData.find({ 
-                id: { $gte: Number(fromPokemon), $lte: Number(toPokemon) } 
+                id: { $gte: fromPokemon, $lte: toPokemon } 
             });       
             if(resultsPage.length === 0){
                 return h.response({

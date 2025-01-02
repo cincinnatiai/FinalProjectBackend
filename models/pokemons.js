@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const PokemonData = new mongoose.Schema({
     id: {
-        type: Number,
+        type: String,
         required: true,
         unique: true, 
     },
@@ -32,5 +32,5 @@ const PokemonData = new mongoose.Schema({
         required: true,
     },
 });
-
-module.exports = mongoose.model("Pokemon", PokemonData);
+const Pokemons = mongoose.model('Pokemon', PokemonData)
+module.exports = Pokemons

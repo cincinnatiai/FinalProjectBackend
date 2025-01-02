@@ -2,7 +2,7 @@ const Hapi = require('@hapi/hapi');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const routes = require('./handlers/router');
-
+const Joi = require('joi')
 
 dotenv.config();
 
