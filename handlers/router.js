@@ -8,7 +8,6 @@ const addPokemon = require("./addPokemonRoute");
 const pagePokemons = require("./getPokemonPageRoute");
 
 
-
 const routes = [
   {
     method: 'GET',

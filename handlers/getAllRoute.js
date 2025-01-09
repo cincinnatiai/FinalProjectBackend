@@ -4,7 +4,6 @@ const Hapi = require('@hapi/hapi');
 
 const saveAllPokemons = {
     method: 'GET',
-    path: '/pokemon/fetchAll',
     handler: async function (request, h) {
         try {
             const savePokemon = async (id) => {
@@ -42,7 +41,7 @@ const saveAllPokemons = {
             await Promise.all(promises);
 
             return h.response({
-                message: 'Fetched and saved Pokémon data for IDs 1 to 1000.',
+                message: 'Fetched and saved Pokémon data for IDs 1 to 100.',
             }).code(200);
         } catch (error) {
             console.error('Error during batch fetch:', error);
