@@ -1,40 +1,113 @@
+const Joi = require('joi');
 const PokemonData = require('../models/pokemons');
 
-const editPokemon = {
-    method: 'PUT',
-    handler: async function (request, h) {
-        const { id } = request.query;
+const querySchema = Joi.object({
+  id: Joi.number()
+    .integer()
+    .positive()
+    .required()
+    .messages({
+      'any.required': 'Pokemon ID is required!',
+      'number.base': 'Pokemon ID must be a valid number!',
+      'number.integer': 'Pokemon ID must be an integer!',
+      'number.positive': 'Pokemon ID must be a positive integer!',
+    }),
+});
 
-        if (!id) {
-            return h.response({ message: 'Please provide a valid Pokémon ID!' }).code(400);
-        }
+const updateSchema = Joi.object({
+  name: Joi.string().messages({
+    'string.base': 'Pokemon name must be a string!',
+  }),
 
-        const updates = request.payload; 
+  abilities: Joi.array()
+    .items(Joi.string())
+    .min(1)
+    .messages({
+      'array.base': 'Pokemon abilities must be an array of strings!',
+      'array.min': 'Pokemon must have at least one ability.',
+    }),
 
-        try {
-            const result = await PokemonData.updateOne(
-                { id: parseInt(id, 10) }, 
-                { $set: updates }
-            );
+  weight: Joi.number().messages({
+    'number.base': 'Pokemon weight must be a number!',
+  }),
 
-            if (result.matchedCount === 0) {
-                return h.response({
-                    message: `No Pokémon found with ID: ${id}.`,
-                }).code(404);
-            }
+  height: Joi.number().messages({
+    'number.base': 'Pokemon height must be a number!',
+  }),
 
-            return h.response({
-                message: `Pokémon with ID: ${id} updated successfully.`,
-                updatedFields: updates,
-            }).code(200);
-        } catch (error) {
-            console.error('Error updating Pokémon:', error);
-            return h.response({
-                message: 'Error while updating the Pokémon.',
-                error: error.message,
-            }).code(500);
-        }
-    },
+  types: Joi.array()
+    .items(Joi.string())
+    .min(1)
+    .messages({
+      'array.base': 'Pokemon types must be an array of strings!',
+      'array.min': 'Pokemon must have at least one type.',
+    }),
+
+  image: Joi.string()
+    .uri()
+    .messages({
+      'string.uri': 'Pokemon image must be a valid URI!',
+    }),
+});
+
+const editPokemonHandler = async (request, h) => {
+  try {
+    const { error: queryError, value: validatedQuery } = querySchema.validate(request.query, {
+      abortEarly: false,
+    });
+
+    if (queryError) {
+      return h
+        .response({
+          message: 'Validation error',
+          details: queryError.details.map((detail) => detail.message),
+        })
+        .code(400);
+    }
+    const { error: payloadError, value: validatedPayload } = updateSchema.validate(request.payload, {
+      abortEarly: false,
+    });
+
+    if (payloadError) {
+      return h
+        .response({
+          message: 'Validation error',
+          details: payloadError.details.map((detail) => detail.message),
+        })
+        .code(400);
+    }
+
+    const { id } = validatedQuery;
+    const result = await PokemonData.updateOne(
+      { id: parseInt(id, 10) },
+      { $set: validatedPayload }
+    );
+
+    if (result.matchedCount === 0) {
+      return h
+        .response({
+          message: `No Pokemon found with ID: ${id}.`,
+        })
+        .code(404);
+    }
+
+    return h
+      .response({
+        message: `Pokemon with ID: ${id} updated successfully.`,
+        updatedFields: validatedPayload,
+      })
+      .code(200);
+  } catch (error) {
+    return h
+      .response({
+        message: 'Error while updating the Pokemon.',
+        error: error.message,
+      })
+      .code(500);
+  }
 };
 
-module.exports = editPokemon;
+module.exports = {
+  method: 'PUT',
+  handler: editPokemonHandler,
+};
