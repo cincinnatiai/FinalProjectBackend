@@ -1,34 +1,58 @@
+const Joi = require('joi');
 const PokemonData = require('../models/pokemons');
 
-const deletePokemonById = {
-    method: 'DELETE',
-    handler: async function (request, h) {
-        const { id } = request.query;
+const deleteSchema = Joi.object({
+  id: Joi.number()
+    .integer()
+    .positive()
+    .required()
+    .messages({
+      'any.required': 'Pokemon ID is required!',
+      'number.base': 'Pokemon ID must be a valid number!',
+      'number.integer': 'Pokemon ID must be an integer!',
+      'number.positive': 'Pokemon ID must be a positive integer!',
+    }),
+});
 
-        if (!id) {
-            return h.response({ message: 'Please provide a valid Pokémon ID!' }).code(400);
-        }
+const deletePokemonHandler = async (request, h) => {
+  try {
+    const { error, value } = deleteSchema.validate(request.query, {
+      abortEarly: false,
+    });
+    if (error) {
+      return h
+        .response({
+          message: 'Validation error',
+          details: error.details.map((detail) => detail.message),
+        })
+        .code(400);
+    }
+    const { id } = value;
+    const result = await PokemonData.deleteOne({ id });
+    if (result.deletedCount === 0) {
+      return h
+        .response({
+          message: `No Pokemon found with ID: ${id}.`,
+        })
+        .code(404);
+    }
 
-        try {
-            const result = await PokemonData.deleteOne({ id: parseInt(id, 10) }); 
-
-            if (result.deletedCount === 0) {
-                return h.response({
-                    message: `No pokemon found with ID: ${id}.`,
-                }).code(404);
-            }
-
-            return h.response({
-                message: `Pokémon with ID: ${id} has been deleted successfully.`,
-            }).code(200);
-        } catch (error) {
-            console.error('Error deleting Pokémon:', error);
-            return h.response({
-                message: 'Error while deleting the Pokémon from the database.',
-                error: error.message,
-            }).code(500);
-        }
-    },
+    return h
+      .response({
+        message: `Pokemon with ID: ${id} has been deleted successfully.`,
+      })
+      .code(200);
+  } catch (err) {
+    return h
+      .response({
+        message: 'Error while deleting the Pokmon from the database.',
+        error: err.message,
+      })
+      .code(500);
+  }
 };
 
-module.exports = deletePokemonById;
+module.exports = {
+  method: 'DELETE',
+  handler: deletePokemonHandler,
+};

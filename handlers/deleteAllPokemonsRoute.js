@@ -10,7 +10,6 @@ const deleteAllPokemons = {
                 deletedCount: result.deletedCount, 
             }).code(200);
         } catch (error) {
-            console.error('Error deleting Pokémon:', error);
             return h.response({
                 message: 'Error while deleting Pokémon from the database.',
                 error: error.message,
